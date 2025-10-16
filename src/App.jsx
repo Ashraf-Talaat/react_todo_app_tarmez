@@ -1,0 +1,47 @@
+import { useState } from "react";
+
+//component
+import "./app.css";
+import TodoList from "./components/TodoList";
+import { TodosContext } from "./context/TodosContext";
+
+//other
+import { v4 as uuidv4 } from "uuid";
+
+//list of todos
+const todosList = [
+  {
+    id: uuidv4(),
+    title: "first task",
+    body: "body of first task",
+    isComplete: false,
+  },
+  {
+    id: uuidv4(),
+    title: "sec task",
+    body: "body of sec task",
+    isComplete: false,
+  },
+];
+
+export default function App() {
+  const [todosState, setTodosState] = useState(todosList);
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        background: "#eee",
+      }}
+    >
+      <TodosContext.Provider
+        value={{ todosState: todosState, setTodosState: setTodosState }}
+      >
+        <TodoList />
+      </TodosContext.Provider>
+    </div>
+  );
+}

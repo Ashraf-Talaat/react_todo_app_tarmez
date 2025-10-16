@@ -1,0 +1,19 @@
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #003bc6d2;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+
+.todoCard {
+  transition: 0.3s;
+}
+.todoCard:hover {
+  box-shadow: 0 0 8px 1px rgba(0, 110, 255, 0.61);
+}
