@@ -4,6 +4,7 @@ import { useState } from "react";
 import "./app.css";
 import TodoList from "./components/TodoList";
 import { TodosContext } from "./context/TodosContext";
+import { ToastProvider } from "./context/ToastContext";
 
 //other
 import { v4 as uuidv4 } from "uuid";
@@ -28,20 +29,22 @@ export default function App() {
   const [todosState, setTodosState] = useState(todosList);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        background: "#eee",
-      }}
-    >
-      <TodosContext.Provider
-        value={{ todosState: todosState, setTodosState: setTodosState }}
+    <ToastProvider>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          background: "#eee",
+        }}
       >
-        <TodoList />
-      </TodosContext.Provider>
-    </div>
+        <TodosContext.Provider
+          value={{ todosState: todosState, setTodosState: setTodosState }}
+        >
+          <TodoList />
+        </TodosContext.Provider>
+      </div>
+    </ToastProvider>
   );
 }
