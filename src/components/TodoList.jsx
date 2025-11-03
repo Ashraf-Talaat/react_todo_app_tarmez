@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useMemo } from "react";
 
 //MUI
@@ -24,17 +24,16 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 //component
 import Todo from "./Todo";
-import { TodosContext } from "../context/TodosContext";
-import { useToast } from "../context/ToastContext";
 
-//other
-import { v4 as uuidv4 } from "uuid";
+//context
+import { useTodos } from "../context/TodosContext";
+import { useToast } from "../context/ToastContext";
 
 //**************************************************************************************/
 
 export default function TodoList() {
-  const { todosState, setTodosState } = useContext(TodosContext);
   const { showHideToast } = useToast();
+  const { todosState, dispatch } = useTodos();
 
   const [inputValue, setInputValue] = useState("");
   const [displayTodosTypeBtn, setDisplayTodosTypeBtn] = useState("all");
@@ -78,28 +77,14 @@ export default function TodoList() {
 
   // add btn method
   function handleAddBtn() {
-    const newTodo = {
-      id: uuidv4(),
-      title: inputValue,
-      body: "",
-      isComplete: false,
-    };
-
-    const updateTodos = [...todosState, newTodo];
-    setTodosState(updateTodos);
-    localStorage.setItem("todos", JSON.stringify(updateTodos));
+    dispatch({ type: "add", payload: { newTitle: inputValue } });
     setInputValue("");
     showHideToast("Task Add to the List Successfully!");
   }
 
   //get todos from local storage
   useEffect(() => {
-    const storageTodos = JSON.parse(localStorage.getItem("todos")) ?? [];
-    if (storageTodos) {
-      setTodosState(storageTodos);
-    } else {
-      setTodosState([]);
-    }
+    dispatch({ type: "get" });
   }, []);
 
   //*****start Event handlers*****
@@ -117,11 +102,7 @@ export default function TodoList() {
     setShowDeleteDialog(false);
   }
   function handleDeleteConfirm() {
-    const updateTodos = todosState.filter((t) => {
-      return t.id != dialogTodo.id;
-    });
-    setTodosState(updateTodos);
-    localStorage.setItem("todos", JSON.stringify(updateTodos));
+    dispatch({ type: "delete", payload: dialogTodo });
     setShowDeleteDialog(false);
     showHideToast("Task Deleted Successfully!");
   }
@@ -136,19 +117,7 @@ export default function TodoList() {
     setShowEditDialog(false);
   }
   function handleEditDialogClickConfirm() {
-    const updatedTodos = todosState.map((t) => {
-      if (t.id == dialogTodo.id) {
-        return {
-          ...t,
-          title: dialogTodo.title,
-          body: dialogTodo.body,
-        };
-      } else {
-        return t;
-      }
-    });
-    setTodosState(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    dispatch({ type: "edit", payload: dialogTodo });
     setShowEditDialog(false);
     showHideToast("Task Edit Successfully!");
   }

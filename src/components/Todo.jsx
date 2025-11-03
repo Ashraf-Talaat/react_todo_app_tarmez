@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useContext } from "react";
+import React from "react";
 
 //MUI
 import Card from "@mui/material/Card";
@@ -13,8 +12,8 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import IconButton from "@mui/material/IconButton";
 
-//components
-import { TodosContext } from "../context/TodosContext";
+//context
+import { useTodos } from "../context/TodosContext";
 import { useToast } from "../context/ToastContext";
 
 //**************************************************************************************/
@@ -24,28 +23,22 @@ export default function Todo({
   showOpenDeleteDialog,
   showOpenEditDialog,
 }) {
-  const { todosState, setTodosState } = useContext(TodosContext);
-  //   const [editInputValue, setEditInputValue] = useState({
-  //   title: todo.title || "",
-  //   body: todo.body || "",
-  // }); 
+  const { todosState, dispatch } = useTodos();
   const { showHideToast } = useToast();
 
   //*****start Event handlers*****
   //start check icon btn
   function handleCheckClick() {
-    const updateTodos = todosState.map((t) => {
+    dispatch({ type: "toggleCompleted", payload: todo });
+    todosState.map((t) => {
       if (t.id == todo.id) {
-        t.isComplete = !t.isComplete;
         const msg = t.isComplete
-          ? "Add to Complete Tasks Successfully!"
-          : "Remove from Complete Tasks Successfully!";
+          ? "Remove from Complete Tasks Successfully!"
+          : "Add to Complete Tasks Successfully!";
         showHideToast(msg);
       }
       return t;
     });
-    setTodosState(updateTodos);
-    localStorage.setItem("todos", JSON.stringify(updateTodos));
   }
   //end check icon btn
 

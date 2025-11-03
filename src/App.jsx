@@ -3,7 +3,9 @@ import { useState } from "react";
 //component
 import "./app.css";
 import TodoList from "./components/TodoList";
-import { TodosContext } from "./context/TodosContext";
+
+//context
+import TodosProvider from "./context/TodosContext";
 import { ToastProvider } from "./context/ToastContext";
 
 //other
@@ -29,22 +31,20 @@ export default function App() {
   const [todosState, setTodosState] = useState(todosList);
 
   return (
-    <ToastProvider>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          background: "#eee",
-        }}
-      >
-        <TodosContext.Provider
-          value={{ todosState: todosState, setTodosState: setTodosState }}
+    <TodosProvider>
+      <ToastProvider>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            background: "#eee",
+          }}
         >
           <TodoList />
-        </TodosContext.Provider>
-      </div>
-    </ToastProvider>
+        </div>
+      </ToastProvider>
+    </TodosProvider>
   );
 }
